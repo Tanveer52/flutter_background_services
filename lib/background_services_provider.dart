@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_foreground_task/flutter_foreground_task.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+// ChangeNotifierProvider to manage the background service state
 final backgroundServiceProvider =
     ChangeNotifierProvider<BackgroundServiceNotifier>((ref) {
   return BackgroundServiceNotifier();
@@ -72,6 +73,13 @@ class BackgroundServiceNotifier extends ChangeNotifier {
       _isServiceRunning = false;
       notifyListeners();
     }
+  }
+
+  // Method to start the background service in sequence
+  Future<void> startServiceSequence() async {
+    await requestPermissions(); // Step 1: Request necessary permissions
+    _initializeForegroundTask(); // Step 2: Initialize the foreground task
+    await startForegroundTask(); // Step 3: Start the foreground service
   }
 }
 
